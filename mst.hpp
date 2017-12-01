@@ -43,7 +43,7 @@ class Tree{
         void printedges();
 };
 
-void buildmst(Tree tr, DSet d);
+void buildmst(Tree &tr, DSet &d);
 
 
 #endif /* mst_hpp */

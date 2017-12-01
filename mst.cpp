@@ -49,7 +49,7 @@ void Tree::printedges() {
     cout << endl;
 }
 
-void buildmst(Tree tr, DSet ds) {
+void buildmst(Tree &tr, DSet &ds) {
     // run the rmnedges, union the nodes if possible, add to graphedges
     // delete everything in rmnedges
     // set newedges = false

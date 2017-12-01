@@ -47,47 +47,52 @@ int main(int argc, char* argv[]) {
                 t = stoi(st);
                 c = stoi(sc);
                 Edge e(f, t, c);
+                ds.addnew(f);
+                ds.addnew(t);
                 if ((ds.vertex.count(f) == 0) && (ds.vertex.count(t) == 0)) {
                     // no need to perform union
                     mst.comp++; // we have a lone edge
                 }
                 else if (!(ds.merge(f,t))) { // tells us we created a cycle
+                    ds.merge(f,t);
                     mst.cycle = true;
                 }
                 mst.cost += c; // add edge cost
                 mst.graphedges[c] = e; // to keep track of what is in mst
                 mst.newedges = true; // so we know we must rerun kruskals if queried
                 }
-                break;
         }
         // ANSWERING QUERIES: (Continue building the tree if there are new edges. Then return the value asked for.)
         if (command == "COST?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }
-                return mst.cost;
-                break;
+                cout <<  mst.cost << endl;
         }
         if (command == "COMPONENT?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }
-                return mst.comp;
-                break;
+                cout <<  mst.comp << endl;
         }
         if (command == "CYCLE?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }
-                return mst.cycle;
-                break;
+                switch(mst.cycle) {
+                    case 0:
+                        cout << "NO" << endl;
+                        break;
+                    case 1: 
+                        cout << "YES" << endl;
+                        break;
+                }
         }
         if (command == "LIST?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }
                 mst.printedges();
-                break;
         }
     } while(command != "END");
     return 0;
