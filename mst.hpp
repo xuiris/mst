@@ -20,16 +20,16 @@ using namespace std;
 // AN EDGE OBJECT:
 struct Edge{
     int frm, to, cost;
-    Edge(int f, int t, int c) { frm = f; to = t; cost = c;}
-}
+    Edge(int f = 0, int t = 0, int = 0);
+};
 
 // DISJOINT SETS:
 struct DSet{
     map<int, int> vertex; // stores all vertexes
     bool addnew(int v); // returns false if vertex was already in set
     int find(int x);
-    bool union(int x, int y); // returns true if union occurs
-}
+    bool merge(int x, int y); // returns true if union occurs
+};
 
 // TREE OBJECT:
 class Tree{
@@ -41,7 +41,7 @@ class Tree{
         map<int, Edge> graphedges;
         map<int, Edge> rmnedges;
         void printedges();
-}
+};
 
 void buildmst(Tree tr, DSet d);
 

@@ -8,7 +8,13 @@
 
 #include "mst.hpp"
 
-bool Dset::addnew(int v) {
+Edge::Edge(int f, int t, int c) {
+    frm = f;
+    to = t;
+    cost = c;
+}
+
+bool DSet::addnew(int v) {
     if (vertex.count(v) == 0) {
         vertex[v] = v;
         return true;
@@ -16,10 +22,11 @@ bool Dset::addnew(int v) {
     else return false;
 }
 
-int Dset::find(int x) {
+int DSet::find(int x) {
     return vertex[x]; // gives back the "name" of set
 }
-bool Dset::union(int x, int y) {
+
+bool DSet::merge(int x, int y) {
     int n = find(x);
     int p = find(y);
     if (n != p) { // not in same set, can union by putting in same set
@@ -35,9 +42,9 @@ bool Dset::union(int x, int y) {
 }
 
 void Tree::printedges() {
-    std::map<int, Edges>::iterator it;
+    std::map<int, Edge>::iterator it;
     for(it = graphedges.begin(); it != graphedges.end(); ++it) {
-        cout << "(" << it->second.f << "," << it->second.t << ") ";
+        cout << "(" << it->second.frm << "," << it->second.to << ") ";
     }
     cout << endl;
 }
@@ -46,9 +53,9 @@ void buildmst(Tree tr, DSet ds) {
     // run the rmnedges, union the nodes if possible, add to graphedges
     // delete everything in rmnedges
     // set newedges = false
-    std::map<int, Edges>::iterator it;
+    std::map<int, Edge>::iterator it;
     for(it = tr.rmnedges.begin(); it != tr.rmnedges.end(); ++it) { // for all rmnedges
-        if (ds.union(it->second.f, it->second.t)) { // if union is a success
+        if (ds.merge(it->second.frm, it->second.to)) { // if union is a success
             tr.comp--; // 1 less component bc have connected some edge
             tr.cost += it->first; // increase cost of mst
         }
