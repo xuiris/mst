@@ -24,7 +24,6 @@ int main(int argc, char* argv[]) {
         // TAKING IN NEW EDGES:
         if (command == "BID") {
                 // take in values from input, convert to int and store
-                {
                 iss >> sf >> st >> sc;
                 f = stoi(sf);
                 t = stoi(st);
@@ -33,15 +32,15 @@ int main(int argc, char* argv[]) {
                 Edge e(f, t, c);
                 // alter the tree
                 mst.rmnedges[c] = e; // add to rmnedges in mst
-                mst.comp++; // added single edge, must increase components
                 mst.newedges = true; // so we know we must rerun kruskals if queried
                 // add vertexes to disj set:
                 ds.addnew(f);
                 ds.addnew(t);
+                if (ds.find(f) != ds.find(t)) {
+                    mst.comp++; // only increase if adding an edge that wouldn't be creating cycle
                 }
         }
         if (command == "MANDATORY") {
-                {
                 iss >> sf >> st >> sc;
                 f = stoi(sf);
                 t = stoi(st);
@@ -49,27 +48,24 @@ int main(int argc, char* argv[]) {
                 Edge e(f, t, c);
                 ds.addnew(f);
                 ds.addnew(t);
-                if ((ds.vertex.count(f) == 0) && (ds.vertex.count(t) == 0)) {
-                    // no need to perform union
-                    mst.comp++; // we have a lone edge
-                }
-                else if (!(ds.merge(f,t))) { // tells us we created a cycle
+                if (!(ds.merge(f,t))) { // tells us we created a cycle
                     ds.merge(f,t);
                     mst.cycle = true;
+                }
+                else {
+                    mst.comp++;
                 }
                 mst.cost += c; // add edge cost
                 mst.graphedges[c] = e; // to keep track of what is in mst
                 mst.newedges = true; // so we know we must rerun kruskals if queried
-                }
         }
-        // ANSWERING QUERIES: (Continue building the tree if there are new edges. Then return the value asked for.)
         if (command == "COST?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }
                 cout <<  mst.cost << endl;
         }
-        if (command == "COMPONENT?") {
+        if (command == "COMPONENTS?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }

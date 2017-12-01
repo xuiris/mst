@@ -58,8 +58,8 @@ void buildmst(Tree &tr, DSet &ds) {
         if (ds.merge(it->second.frm, it->second.to)) { // if union is a success
             tr.comp--; // 1 less component bc have connected some edge
             tr.cost += it->first; // increase cost of mst
+            tr.graphedges[it->first] = it->second; // to keep track of whats in graph
         }
-        tr.graphedges[it->first] = it->second; // to keep track of whats in graph
     }
     tr.rmnedges.clear(); // delete everything, theres nothing else to process
     tr.newedges = false;
