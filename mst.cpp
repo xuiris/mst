@@ -8,13 +8,15 @@
 
 #include "mst.hpp"
 
-Edge::Edge(int f, int t, int c) {
+Edge::Edge(int f, int t, int c) { //constructor
     frm = f;
     to = t;
     cost = c;
 }
 
-bool DSet::addnew(int v) {
+//------------------------------------------------------------------------------------------
+
+bool DSet::addnew(int v) { 
     if (vertex.count(v) == 0) {
         vertex[v] = v;
         return true;
@@ -41,6 +43,17 @@ bool DSet::merge(int x, int y) {
     else return false; // already in same set, cannot perform union again
 }
 
+int DSet::numsets(){
+    set<int> components; // keeps track of each unique set in DSet
+    std::map<int, int>::iterator it;
+    for(it = vertex.begin(); it != vertex.end(); ++it) { // for each vertex
+        components.insert(it->second); //insert the set
+    }
+    return components.size();
+}
+
+//---------------------------------------------------------------------------------------------------
+
 void Tree::printedges() {
     std::map<int, Edge>::iterator it;
     for(it = graphedges.begin(); it != graphedges.end(); ++it) {
@@ -49,6 +62,8 @@ void Tree::printedges() {
     cout << endl;
 }
 
+//---------------------------------------------------------------------------------------------------
+
 void buildmst(Tree &tr, DSet &ds) {
     // run the rmnedges, union the nodes if possible, add to graphedges
     // delete everything in rmnedges
@@ -56,11 +71,11 @@ void buildmst(Tree &tr, DSet &ds) {
     std::map<int, Edge>::iterator it;
     for(it = tr.rmnedges.begin(); it != tr.rmnedges.end(); ++it) { // for all rmnedges
         if (ds.merge(it->second.frm, it->second.to)) { // if union is a success
-            tr.comp--; // 1 less component bc have connected some edge
             tr.cost += it->first; // increase cost of mst
             tr.graphedges[it->first] = it->second; // to keep track of whats in graph
         }
     }
     tr.rmnedges.clear(); // delete everything, theres nothing else to process
     tr.newedges = false;
+    tr.comp = ds.numsets(); //update the # of components in the graph tree
 }

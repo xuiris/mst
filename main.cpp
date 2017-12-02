@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
         istringstream iss(line);
         iss >> command;
         // TAKING IN NEW EDGES:
-        if (command == "BID") {
+        if (command == "BID") { // want to take in edge and store for later
                 // take in values from input, convert to int and store
                 iss >> sf >> st >> sc;
                 f = stoi(sf);
@@ -36,34 +36,32 @@ int main(int argc, char* argv[]) {
                 // add vertexes to disj set:
                 ds.addnew(f);
                 ds.addnew(t);
-                if (ds.find(f) != ds.find(t)) {
-                    mst.comp++; // only increase if adding an edge that wouldn't be creating cycle
-                }
         }
-        if (command == "MANDATORY") {
+        if (command == "MANDATORY") { // process this connected edge into DisjSet right away, add to tree
+                // take in values from input, convert to int and store
                 iss >> sf >> st >> sc;
                 f = stoi(sf);
                 t = stoi(st);
                 c = stoi(sc);
+                // create edge object
                 Edge e(f, t, c);
+                // add vertexes to disj set:
                 ds.addnew(f);
                 ds.addnew(t);
+                // perform merge on the dset
                 if (!(ds.merge(f,t))) { // tells us we created a cycle
-                    ds.merge(f,t);
                     mst.cycle = true;
-                }
-                else {
-                    mst.comp++;
                 }
                 mst.cost += c; // add edge cost
                 mst.graphedges[c] = e; // to keep track of what is in mst
                 mst.newedges = true; // so we know we must rerun kruskals if queried
         }
+        // ANSWERING QUERIES: we must keep build the tree if there are new edges, then return value
         if (command == "COST?") {
                 if (mst.newedges == true) {
                     buildmst(mst, ds);
                 }
-                cout <<  mst.cost << endl;
+                cout << mst.cost << endl;
         }
         if (command == "COMPONENTS?") {
                 if (mst.newedges == true) {
@@ -90,7 +88,7 @@ int main(int argc, char* argv[]) {
                 }
                 mst.printedges();
         }
-    } while(command != "END");
+    } while(command != "END"); 
     return 0;
 }
     
